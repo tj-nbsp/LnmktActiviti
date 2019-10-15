@@ -1,0 +1,45 @@
+spring:
+  http:
+    multipart:
+      max-file-size: -1
+      max-request-size: -1
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: 'jdbc:mysql://localhost:3306/lnmkt_activiti?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&autoReconnect=true&useSSL=false'
+    username: lnmkt_activiti
+    password: lnmkt_activiti
+    druid:
+      initial-size: 16
+      max-active: 256
+      min-idle: 16
+      max-wait: 5000
+      validation-query: select 1
+      test-on-borrow: false
+      test-on-return: false
+      test-while-idle: true
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      filter.stat.enabled: false
+      stat-view-servlet.enabled: false
+      web-stat-filter.enabled: false
+  activiti:
+    database-schema-update: true
+    history-full: full
+    check-process-definitions: false
+  freemarker:
+    suffix: .ftl
+    cache: false
+    charset: UTF-8
+    contentType: text/html
+    requestContextAttribute: ctx
+    templateEncoding: UTF-8
+    templateLoaderPath: classpath:/templates/
+    settings:
+      defaultEncoding: UTF-8
+      url_escaping_charset: UTF-8
+      locale: zh_CN
+    
+server:
+  port: 8080
+  session:
+    timeout: 3600

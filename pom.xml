@@ -1,0 +1,103 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.jiajin.lnmkt</groupId>
+  <artifactId>lnmkt-activiti</artifactId>
+  <version>0.0.1</version>
+  <packaging>jar</packaging>
+
+  <name>lnmkt-activiti</name>
+  <url>http://maven.apache.org</url>
+
+  <properties>
+  	<java.version>1.8</java.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <activiti.version>6.0.0</activiti.version>
+    <apache.xmlgraphics.version>1.7</apache.xmlgraphics.version>
+  </properties>
+  
+  <parent>
+       <groupId>org.springframework.boot</groupId>
+       <artifactId>spring-boot-starter-parent</artifactId>
+       <version>2.0.9.RELEASE</version>
+   </parent>
+
+  <dependencies>
+  
+	<dependency>
+		<groupId>org.activiti</groupId>
+		<artifactId>activiti-spring-boot-starter-basic</artifactId>
+		<version>${activiti.version}</version>
+	</dependency>
+	
+	<dependency>
+	     <groupId>org.activiti</groupId>
+	     <artifactId>activiti-json-converter</artifactId>
+	     <version>${activiti.version}</version>
+	     <exclusions>
+			<exclusion>
+				<groupId>org.activiti</groupId>
+	    		<artifactId>activiti-bpmn-model</artifactId>
+			</exclusion>
+	     </exclusions>
+  	</dependency>
+  	
+  	<dependency> 
+	    <groupId>org.apache.xmlgraphics</groupId> 
+	    <artifactId>batik-codec</artifactId> 
+	    <version>${apache.xmlgraphics.version}</version> 
+    </dependency> 
+    <dependency> 
+	    <groupId>org.apache.xmlgraphics</groupId> 
+	    <artifactId>batik-css</artifactId> 
+	    <version>${apache.xmlgraphics.version}</version> 
+    </dependency> 
+    <dependency> 
+	    <groupId>org.apache.xmlgraphics</groupId> 
+	    <artifactId>batik-svg-dom</artifactId> 
+	    <version>${apache.xmlgraphics.version}</version> 
+    </dependency> 
+    <dependency> 
+	    <groupId>org.apache.xmlgraphics</groupId> 
+	    <artifactId>batik-svggen</artifactId> 
+	    <version>${apache.xmlgraphics.version}</version> 
+    </dependency>
+	
+	<dependency>
+        <groupId>com.alibaba</groupId>
+        <artifactId>druid-spring-boot-starter</artifactId>
+        <version>1.1.16</version>
+    </dependency>
+	
+	<dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+    </dependency>
+    
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    
+    <dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-freemarker</artifactId>
+	</dependency>
+    
+  </dependencies>
+  
+  <build>
+  	<plugins>
+  		<plugin>
+  			<groupId>org.apache.maven.plugins</groupId>
+  			<artifactId>maven-compiler-plugin</artifactId>
+  			<configuration>
+  				<source>1.8</source>
+  				<target>1.8</target>
+  			</configuration>
+  		</plugin>
+  	</plugins>
+  </build>
+  
+</project>
