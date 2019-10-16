@@ -24,8 +24,9 @@ spring:
       web-stat-filter.enabled: false
   activiti:
     database-schema-update: true
-    history-full: full
+    history-level: full
     check-process-definitions: false
+    async-executor-activate: false
   freemarker:
     suffix: .ftl
     cache: false

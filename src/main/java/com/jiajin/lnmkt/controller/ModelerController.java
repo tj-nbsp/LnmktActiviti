@@ -34,7 +34,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
  * liuzhize 2019年3月7日下午3:28:14
  */
 @Controller
-public class ModelerController{
+public class ModelerController {
 
     private static final Logger logger = LoggerFactory.getLogger(ModelerController.class);
 
@@ -153,6 +153,11 @@ public class ModelerController{
 				 * 参数不加true:为普通删除，如果当前规则下有正在执行的流程，则抛异常 
 				 * 参数加true:为级联删除,会删除和当前规则相关的所有信息，包括历史 
 				 */
+			    if (StringUtils.isEmpty(modelData.getDeploymentId())) {
+			        map.put("code", "FAILURE");
+			        map.put("message", "请先发布了, 再撤销^^");
+			        return map;
+			    }
 				repositoryService.deleteDeployment(modelData.getDeploymentId(),true);
 				map.put("code", "SUCCESS");
 			} catch (Exception e) {

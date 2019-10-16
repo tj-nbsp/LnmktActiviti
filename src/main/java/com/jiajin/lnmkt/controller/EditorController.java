@@ -29,7 +29,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 @RestController
 @RequestMapping("service")
-public class EditorController implements ModelDataJsonConstants {
+public class EditorController {
 
     Logger log = LoggerFactory.getLogger(getClass());
 
@@ -65,9 +65,9 @@ public class EditorController implements ModelDataJsonConstants {
                     modelNode = (ObjectNode) objectMapper.readTree(model.getMetaInfo());
                 } else {
                     modelNode = objectMapper.createObjectNode();
-                    modelNode.put(MODEL_NAME, model.getName());
+                    modelNode.put(ModelDataJsonConstants.MODEL_NAME, model.getName());
                 }
-                modelNode.put(MODEL_ID, model.getId());
+                modelNode.put(ModelDataJsonConstants.MODEL_ID, model.getId());
                 ObjectNode editorJsonNode = (ObjectNode) objectMapper.readTree(new String(repositoryService.getModelEditorSource(model.getId()), "utf-8"));
                 modelNode.putPOJO("model", editorJsonNode);
             } catch (Exception e) {
@@ -96,8 +96,8 @@ public class EditorController implements ModelDataJsonConstants {
 
             ObjectNode modelJson = (ObjectNode) objectMapper.readTree(model.getMetaInfo());
 
-            modelJson.put(MODEL_NAME, name);
-            modelJson.put(MODEL_DESCRIPTION, description);
+            modelJson.put(ModelDataJsonConstants.MODEL_NAME, name);
+            modelJson.put(ModelDataJsonConstants.MODEL_DESCRIPTION, description);
             model.setMetaInfo(modelJson.toString());
             model.setName(name);
             repositoryService.saveModel(model);
