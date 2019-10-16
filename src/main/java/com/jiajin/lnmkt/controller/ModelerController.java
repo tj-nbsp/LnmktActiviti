@@ -67,12 +67,9 @@ public class ModelerController{
     
     /**
      * 创建模型
-     * @param response
-     * @param name 模型名称
-     * @param key 模型key
      */
     @RequestMapping("/create")
-    public void create(HttpServletResponse response,String name,String key) throws IOException {
+    public void create(String name, String key, HttpServletResponse response) throws IOException {
     	logger.info("创建模型入参name：{},key:{}",name,key);
         Model model = repositoryService.newModel();
         ObjectNode modelNode = objectMapper.createObjectNode();
@@ -90,7 +87,6 @@ public class ModelerController{
     
     /**
      * 创建模型时完善ModelEditorSource
-     * @param modelId
      */
 	@SuppressWarnings("deprecation")
 	private void createObjectNode(String modelId){
@@ -111,11 +107,9 @@ public class ModelerController{
     
     /**
      * 发布流程
-     * @param modelId 模型ID
-     * @return
      */
-    @ResponseBody
     @RequestMapping("/publish")
+    @ResponseBody
     public Object publish(String modelId){
     	logger.info("流程部署入参modelId：{}",modelId);
     	Map<String, String> map = new HashMap<String, String>();
@@ -146,12 +140,9 @@ public class ModelerController{
     
     /**
      * 撤销流程定义
-     * @param modelId 模型ID
-     * @param result
-     * @return
      */
-    @ResponseBody
     @RequestMapping("/revokePublish")
+    @ResponseBody
     public Object revokePublish(String modelId){
     	logger.info("撤销发布流程入参modelId：{}",modelId);
     	Map<String, String> map = new HashMap<String, String>();
@@ -175,12 +166,9 @@ public class ModelerController{
     
     /**
      * 删除流程实例
-     * @param modelId 模型ID
-     * @param result
-     * @return
      */
-    @ResponseBody
     @RequestMapping("/delete")
+    @ResponseBody
     public Object deleteProcessInstance(String modelId){
     	logger.info("删除流程实例入参modelId：{}",modelId);
     	Map<String, String> map = new HashMap<String, String>();

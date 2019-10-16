@@ -43,7 +43,7 @@ public class EditorController implements ModelDataJsonConstants {
      */
     @RequestMapping(value = "/editor/stencilset", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
     public String loadStencilset() {
-        InputStream stencilsetStream = this.getClass().getClassLoader().getResourceAsStream("stencilset.json");
+        InputStream stencilsetStream = this.getClass().getClassLoader().getResourceAsStream("static/stencilset.json");
         try {
             return IOUtils.toString(stencilsetStream, "utf-8");
         } catch (Exception e) {
