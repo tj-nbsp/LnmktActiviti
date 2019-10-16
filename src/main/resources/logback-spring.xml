@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<property name="logPattern" value="%date|%thread|%X{uid}|%level{8}|%logger{50}:%line|%msg %ex ------%n"></property>
+
+	<appender name="stdoutAppender" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>${logPattern}</pattern>
+			<charset>utf8</charset>
+		</encoder>
+	</appender>
+
+	<root>
+		<level value="info" />
+		<appender-ref ref="stdoutAppender" />
+	</root>
+	
+	<logger name="org.activiti" level="error" />
+	<logger name="org.activiti.engine.impl.persistence.entity" level="debug" />
+
+</configuration>

@@ -38,8 +38,3 @@ spring:
       defaultEncoding: UTF-8
       url_escaping_charset: UTF-8
       locale: zh_CN
-    
-server:
-  port: 8080
-  session:
-    timeout: 3600
