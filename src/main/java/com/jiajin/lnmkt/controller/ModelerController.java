@@ -57,7 +57,6 @@ public class ModelerController {
 	
     /**
      * 跳转编辑器页面
-     * @return
      */
     @GetMapping("editor")
     public String editor(){
@@ -71,14 +70,15 @@ public class ModelerController {
     @RequestMapping("/create")
     public void create(String name, String key, HttpServletResponse response) throws IOException {
     	logger.info("创建模型入参name：{},key:{}",name,key);
+        ObjectNode metaInfo = objectMapper.createObjectNode();
+        metaInfo.put(ModelDataJsonConstants.MODEL_NAME, name);
+        metaInfo.put(ModelDataJsonConstants.MODEL_DESCRIPTION, "");
+        metaInfo.put(ModelDataJsonConstants.MODEL_REVISION, 1);
+        
         Model model = repositoryService.newModel();
-        ObjectNode modelNode = objectMapper.createObjectNode();
-        modelNode.put(ModelDataJsonConstants.MODEL_NAME, name);
-        modelNode.put(ModelDataJsonConstants.MODEL_DESCRIPTION, "");
-        modelNode.put(ModelDataJsonConstants.MODEL_REVISION, 1);
         model.setName(name);
         model.setKey(key);
-        model.setMetaInfo(modelNode.toString());
+        model.setMetaInfo(metaInfo.toString());
         repositoryService.saveModel(model);
         createObjectNode(model.getId());
         response.sendRedirect("/editor?modelId="+ model.getId());
@@ -88,7 +88,6 @@ public class ModelerController {
     /**
      * 创建模型时完善ModelEditorSource
      */
-	@SuppressWarnings("deprecation")
 	private void createObjectNode(String modelId){
     	 logger.info("创建模型完善ModelEditorSource入参模型ID：{}",modelId);
     	 ObjectNode editorNode = objectMapper.createObjectNode();
@@ -96,7 +95,7 @@ public class ModelerController {
          editorNode.put("resourceId", "canvas");
          ObjectNode stencilSetNode = objectMapper.createObjectNode();
          stencilSetNode.put("namespace","http://b3mn.org/stencilset/bpmn2.0#");
-         editorNode.put("stencilset", stencilSetNode);
+         editorNode.putPOJO("stencilset", stencilSetNode);
          try {
 			repositoryService.addModelEditorSource(modelId,editorNode.toString().getBytes("utf-8"));
 		} catch (Exception e) {
@@ -199,4 +198,5 @@ public class ModelerController {
 		logger.info("删除流程实例出参map：{}",map);
         return map;
     }
+    
 }

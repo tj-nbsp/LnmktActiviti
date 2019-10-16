@@ -2,10 +2,12 @@ package com.jiajin.lnmkt.controller;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 import javax.annotation.Resource;
 
+import org.activiti.editor.constants.ModelDataJsonConstants;
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.repository.Model;
@@ -19,10 +21,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.activiti.editor.constants.ModelDataJsonConstants;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -41,21 +41,16 @@ public class EditorController {
     /**
      * 加载用于渲染流程组件的 JSON 配置
      */
-    @RequestMapping(value = "/editor/stencilset", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-    public String loadStencilset() {
+    @RequestMapping(value = "/editor/stencilset")
+    public String loadStencilset() throws IOException {
         InputStream stencilsetStream = this.getClass().getClassLoader().getResourceAsStream("static/stencilset.json");
-        try {
-            return IOUtils.toString(stencilsetStream, "utf-8");
-        } catch (Exception e) {
-            log.error("Error while loading stencil set", e);
-            throw new ActivitiException("Error while loading stencil set", e);
-        }
+        return IOUtils.toString(stencilsetStream, "utf-8");
     }
 
     /**
      * 加载 Model 信息
      */
-    @RequestMapping(value = "/model/{modelId}/json", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/model/{modelId}/json")
     public ObjectNode loadModel(@PathVariable("modelId") String modelId) {
         ObjectNode modelNode = null;
         Model model = repositoryService.getModel(modelId);
@@ -87,36 +82,28 @@ public class EditorController {
      * @param json_xml 流程文件
      * @param svg_xml 图片
      */
-    @RequestMapping(value = "/model/{modelId}/save", method = RequestMethod.PUT)
+    @RequestMapping(value = "/model/{modelId}/save")
     @ResponseStatus(value = HttpStatus.OK)
     public void saveModel(@PathVariable String modelId, String name, String description, String json_xml, String svg_xml) {
-        try {
-
+        try(ByteArrayOutputStream outStream = new ByteArrayOutputStream()) {
             Model model = repositoryService.getModel(modelId);
 
             ObjectNode modelJson = (ObjectNode) objectMapper.readTree(model.getMetaInfo());
-
             modelJson.put(ModelDataJsonConstants.MODEL_NAME, name);
             modelJson.put(ModelDataJsonConstants.MODEL_DESCRIPTION, description);
-            model.setMetaInfo(modelJson.toString());
+            
             model.setName(name);
+            model.setMetaInfo(modelJson.toString());
             repositoryService.saveModel(model);
 
             repositoryService.addModelEditorSource(model.getId(), json_xml.getBytes("utf-8"));
 
-            InputStream svgStream = new ByteArrayInputStream(svg_xml.getBytes("utf-8"));
-            TranscoderInput input = new TranscoderInput(svgStream);
-
-            PNGTranscoder transcoder = new PNGTranscoder();
-            // Setup output
-            ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-            TranscoderOutput output = new TranscoderOutput(outStream);
-
             // Do the transformation
+            PNGTranscoder transcoder = new PNGTranscoder();
+            TranscoderInput input = new TranscoderInput(new ByteArrayInputStream(svg_xml.getBytes("utf-8")));
+            TranscoderOutput output = new TranscoderOutput(outStream);
             transcoder.transcode(input, output);
-            final byte[] result = outStream.toByteArray();
-            repositoryService.addModelEditorSourceExtra(model.getId(), result);
-            outStream.close();
+            repositoryService.addModelEditorSourceExtra(model.getId(), outStream.toByteArray());
         } catch (Exception e) {
             log.error("Error saving model", e);
             throw new ActivitiException("Error saving model", e);
