@@ -39,3 +39,15 @@ spring:
       defaultEncoding: UTF-8
       url_escaping_charset: UTF-8
       locale: zh_CN
+      
+# ServerProperties$Tomcat
+server:
+  port: 8081
+  connection-timeout: 5000
+  servlet.session.timeout: 3600
+  tomcat:
+    min-spare-threads: 20
+    max-threads: 512
+    max-connections: 512
+    accept-count: 0
+    use-relative-redirects: true
